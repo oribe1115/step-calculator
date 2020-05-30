@@ -34,10 +34,27 @@ var (
 		{".3", 0, true},
 		{"1..3+", 0, true},
 	}
+
+	mulDivCases = []TestCase{
+		{"6*2", 12, false},
+		{"6/3", 2, false},
+		{"1/3", 0.3333333333333333, false},
+		{"*", 0, true},
+		{"/", 0, true},
+		{"3*", 0, true},
+
+		{"1+2*3", 7, false},
+		{"4-6/2", 1, false},
+		{"6/2*3+1", 10, false},
+	}
 )
 
 func TestBasicCase(t *testing.T) {
 	runTest(t, basicCases)
+}
+
+func TestMulDivCase(t *testing.T) {
+	runTest(t, mulDivCases)
 }
 
 func runTest(t *testing.T, testCases []TestCase) {
