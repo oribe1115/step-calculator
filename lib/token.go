@@ -41,7 +41,7 @@ func CreateMinusToken() *Token {
 }
 
 func ReadNumber(line string) (token *Token, remainder string, err error) {
-	re := regexp.MustCompile("^\\d+\\.?\\d*")
+	re := regexp.MustCompile("^\\d+(\\.\\d+)?")
 	numString := re.FindString(line)
 	num, err := strconv.ParseFloat(numString, 64)
 	if err != nil {

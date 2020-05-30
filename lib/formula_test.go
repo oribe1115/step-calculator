@@ -8,7 +8,7 @@ import (
 
 type TestCase struct {
 	Input   string
-	Result  float64
+	Expect  float64
 	IsError bool
 }
 
@@ -31,17 +31,23 @@ var (
 		{"1-+3", 0, true},
 
 		{"1+5-0.3", 5.7, false},
+		{".3", 0, true},
+		{"1..3+", 0, true},
 	}
 )
 
 func TestBasicCase(t *testing.T) {
-	for _, test := range basicCases {
+	runTest(t, basicCases)
+}
+
+func runTest(t *testing.T, testCases []TestCase) {
+	for _, test := range testCases {
 		formula, err := InitFormula(test.Input)
 		if test.IsError {
 			assert.Error(t, err)
 		} else {
 			assert.NoError(t, err)
-			assert.Equal(t, test.Result, formula.Calc())
+			assert.Equal(t, test.Expect, formula.Calc())
 		}
 	}
 }
