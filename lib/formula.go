@@ -9,7 +9,7 @@ type Formula struct {
 	List []*Token
 }
 
-func InitFormula(line string) *Formula {
+func InitFormula(line string) (*Formula, error) {
 	formula := &Formula{}
 	formula.List = make([]*Token, 0)
 	for len(line) > 0 {
@@ -27,14 +27,17 @@ func InitFormula(line string) *Formula {
 				token, line = ReadPlus(line)
 				break
 			default:
-				fmt.Printf("invalid char: %c", line[0])
-				return nil
+				return nil, fmt.Errorf("invalid char: %c", line[0])
 			}
 		}
 		formula.List = append(formula.List, token)
 	}
 
-	return formula
+	if err := formula.CheckFormat(); err != nil {
+		return formula, err
+	}
+
+	return formula, nil
 }
 
 func (f *Formula) PrintList() {
@@ -60,6 +63,29 @@ func (f *Formula) Calc() float64 {
 	}
 
 	return result
+}
+
+// CheckFormat 問題なく計算が行える構成になっているか確認
+func (f *Formula) CheckFormat() error {
+	if len(f.List) == 0 || len(f.List)%2 != 1 {
+		return fmt.Errorf("invalid list length: %d", len(f.List))
+	}
+
+	for i := 0; i < len(f.List); i += 2 {
+		tokenType := f.List[i].Type
+		if tokenType != TypeNumber {
+			return fmt.Errorf("index %d should be %s but %s", i, TypeNumber, tokenType)
+		}
+	}
+
+	for i := 1; i < len(f.List); i += 2 {
+		tokenType := f.List[i].Type
+		if tokenType == TypeNumber {
+			return fmt.Errorf("index %d should be operator but %s", i, tokenType)
+		}
+	}
+
+	return nil
 }
 
 func isDigit(char byte) bool {

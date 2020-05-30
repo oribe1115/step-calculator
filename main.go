@@ -8,8 +8,12 @@ import (
 
 func main() {
 
-	test := lib.InitFormula("15.4+10")
+	test, err := lib.InitFormula("15.4+10")
 	test.PrintList()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	result := test.Calc()
 	fmt.Println(result)
