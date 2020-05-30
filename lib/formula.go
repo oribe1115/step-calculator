@@ -44,6 +44,24 @@ func (f *Formula) PrintList() {
 	fmt.Print("\n")
 }
 
+func (f *Formula) Calc() float64 {
+	result := float64(0)
+	list := make([]*Token, 0)
+	list = append(list, CreatePlusToken())
+	list = append(list, f.List...)
+
+	for i, token := range list {
+		switch token.Type {
+		case TypePlus:
+			result += list[i+1].GetNumber()
+			break
+		default:
+		}
+	}
+
+	return result
+}
+
 func isDigit(char byte) bool {
 	_, err := strconv.Atoi(string(char))
 	return err == nil

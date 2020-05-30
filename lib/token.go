@@ -51,3 +51,7 @@ func ReadPlus(line string) (token *Token, remainder string) {
 	remainder = strings.TrimLeft(line, "+")
 	return token, remainder
 }
+
+func (t *Token) GetNumber() float64 {
+	return t.Number
+}
