@@ -16,6 +16,7 @@ type TokenType string
 const (
 	TypeNumber TokenType = "NUMBER"
 	TypePlus   TokenType = "PLUS"
+	TypeMinus  TokenType = "MINUS"
 )
 
 func CreateNumberToken(num float64) *Token {
@@ -28,6 +29,13 @@ func CreateNumberToken(num float64) *Token {
 func CreatePlusToken() *Token {
 	return &Token{
 		Type:   TypePlus,
+		Number: 0,
+	}
+}
+
+func CreateMinusToken() *Token {
+	return &Token{
+		Type:   TypeMinus,
 		Number: 0,
 	}
 }
@@ -49,6 +57,12 @@ func ReadNumber(line string) (token *Token, remainder string, err error) {
 func ReadPlus(line string) (token *Token, remainder string) {
 	token = CreatePlusToken()
 	remainder = strings.TrimLeft(line, "+")
+	return token, remainder
+}
+
+func ReadMinus(line string) (token *Token, remainder string) {
+	token = CreateMinusToken()
+	remainder = strings.TrimLeft(line, "-")
 	return token, remainder
 }
 

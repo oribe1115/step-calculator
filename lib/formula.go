@@ -26,6 +26,9 @@ func InitFormula(line string) (*Formula, error) {
 			case '+':
 				token, line = ReadPlus(line)
 				break
+			case '-':
+				token, line = ReadMinus(line)
+				break
 			default:
 				return nil, fmt.Errorf("invalid char: %c", line[0])
 			}
@@ -57,6 +60,9 @@ func (f *Formula) Calc() float64 {
 		switch token.Type {
 		case TypePlus:
 			result += list[i+1].GetNumber()
+			break
+		case TypeMinus:
+			result -= list[i+1].GetNumber()
 			break
 		default:
 		}
