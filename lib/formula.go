@@ -35,6 +35,12 @@ func InitFormula(line string) (*Formula, error) {
 			case '/':
 				token, line = ReadDivision(line)
 				break
+			case '(':
+				token, line, err = ReadBracket(line)
+				if err != nil {
+					return nil, err
+				}
+				break
 			default:
 				return nil, fmt.Errorf("invalid char: %c", line[0])
 			}
@@ -116,14 +122,14 @@ func (f *Formula) CheckFormat() error {
 
 	for i := 0; i < len(f.List); i += 2 {
 		tokenType := f.List[i].Type
-		if tokenType != TypeNumber {
+		if !(tokenType == TypeNumber || tokenType == TypeBracket) {
 			return fmt.Errorf("index %d should be %s but %s", i, TypeNumber, tokenType)
 		}
 	}
 
 	for i := 1; i < len(f.List); i += 2 {
 		tokenType := f.List[i].Type
-		if tokenType == TypeNumber {
+		if tokenType == TypeNumber || tokenType == TypeBracket {
 			return fmt.Errorf("index %d should be operator but %s", i, tokenType)
 		}
 	}

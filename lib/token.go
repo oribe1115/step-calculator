@@ -1,14 +1,16 @@
 package lib
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
 type Token struct {
-	Type   TokenType
-	Number float64
+	Type      TokenType
+	Number    float64
+	InBracket *Formula
 }
 
 type TokenType string
@@ -19,41 +21,62 @@ const (
 	TypeMinus    TokenType = "MINUS"
 	TypeMultiply TokenType = "MULTIPLY"
 	TypeDivision TokenType = "DIVISION"
+	TypeBracket  TokenType = "Bracket"
 )
 
 func CreateNumberToken(num float64) *Token {
 	return &Token{
-		Type:   TypeNumber,
-		Number: num,
+		Type:      TypeNumber,
+		Number:    num,
+		InBracket: nil,
 	}
 }
 
 func CreatePlusToken() *Token {
 	return &Token{
-		Type:   TypePlus,
-		Number: 0,
+		Type:      TypePlus,
+		Number:    0,
+		InBracket: nil,
 	}
 }
 
 func CreateMinusToken() *Token {
 	return &Token{
-		Type:   TypeMinus,
-		Number: 0,
+		Type:      TypeMinus,
+		Number:    0,
+		InBracket: nil,
 	}
 }
 
 func CreateMultiplyToken() *Token {
 	return &Token{
-		Type:   TypeMultiply,
-		Number: 0,
+		Type:      TypeMultiply,
+		Number:    0,
+		InBracket: nil,
 	}
 }
 
 func CreateDivisionToken() *Token {
 	return &Token{
-		Type:   TypeDivision,
-		Number: 0,
+		Type:      TypeDivision,
+		Number:    0,
+		InBracket: nil,
 	}
+}
+
+func CreateBracketToken(inBracketStr string) (*Token, error) {
+	inBracket, err := InitFormula(inBracketStr)
+	if err != nil {
+		return nil, err
+	}
+
+	token := &Token{
+		Type:      TypeBracket,
+		Number:    0,
+		InBracket: inBracket,
+	}
+
+	return token, nil
 }
 
 func ReadNumber(line string) (token *Token, remainder string, err error) {
@@ -94,6 +117,41 @@ func ReadDivision(line string) (token *Token, remainder string) {
 	return token, remainder
 }
 
+func ReadBracket(line string) (token *Token, remainder string, err error) {
+	leftCount := 1
+	rightCount := 0
+	rightBracketIndex := 0
+
+	for i := 1; i < len(line); i++ {
+		if line[i] == '(' {
+			leftCount++
+		} else if line[i] == ')' {
+			rightCount++
+		}
+
+		if leftCount == rightCount {
+			rightBracketIndex = i
+			break
+		}
+	}
+
+	if rightBracketIndex == 0 {
+		return nil, line, fmt.Errorf("faild to find right bracket: %s", line)
+	}
+
+	token, err = CreateBracketToken(line[1:rightBracketIndex])
+	if err != nil {
+		return nil, line, err
+	}
+
+	remainder = line[rightBracketIndex+1:]
+
+	return token, remainder, nil
+}
+
 func (t *Token) GetNumber() float64 {
+	if t.Type == TypeBracket {
+		return t.InBracket.Calc()
+	}
 	return t.Number
 }
