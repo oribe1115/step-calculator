@@ -47,6 +47,14 @@ var (
 		{"4-6/2", 1, false},
 		{"6/2*3+1", 10, false},
 	}
+
+	bracketCases = []TestCase{
+		{"(1+2)*5", 15, false},
+		{"4/(1+1)", 2, false},
+		{"(1+3", 0, true},
+		{"(1++3)", 0, true},
+		{"(4*(1+4)-3)*2", 34, false},
+	}
 )
 
 func TestBasicCase(t *testing.T) {
@@ -55,6 +63,10 @@ func TestBasicCase(t *testing.T) {
 
 func TestMulDivCase(t *testing.T) {
 	runTest(t, mulDivCases)
+}
+
+func TestBracketCase(t *testing.T) {
+	runTest(t, bracketCases)
 }
 
 func runTest(t *testing.T, testCases []TestCase) {
