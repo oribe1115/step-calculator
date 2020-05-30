@@ -29,6 +29,12 @@ func InitFormula(line string) (*Formula, error) {
 			case '-':
 				token, line = ReadMinus(line)
 				break
+			case '*':
+				token, line = ReadMultiply(line)
+				break
+			case '/':
+				token, line = ReadDivision(line)
+				break
 			default:
 				return nil, fmt.Errorf("invalid char: %c", line[0])
 			}
@@ -51,6 +57,13 @@ func (f *Formula) PrintList() {
 }
 
 func (f *Formula) Calc() float64 {
+	f.calcMulDiv()
+	result := f.calcPlusMinus()
+
+	return result
+}
+
+func (f *Formula) calcPlusMinus() float64 {
 	result := float64(0)
 	list := make([]*Token, 0)
 	list = append(list, CreatePlusToken())
@@ -69,6 +82,30 @@ func (f *Formula) Calc() float64 {
 	}
 
 	return result
+}
+
+func (f *Formula) calcMulDiv() {
+	list := make([]*Token, 0)
+
+	for i := 0; i < len(f.List); {
+		switch f.List[i].Type {
+		case TypeMultiply:
+			tmp := list[len(list)-1].GetNumber() * f.List[i+1].GetNumber()
+			list[len(list)-1] = CreateNumberToken(tmp)
+			i += 2
+			break
+		case TypeDivision:
+			tmp := list[len(list)-1].GetNumber() / f.List[i+1].GetNumber()
+			list[len(list)-1] = CreateNumberToken(tmp)
+			i += 2
+			break
+		default:
+			list = append(list, f.List[i])
+			i++
+		}
+	}
+
+	f.List = list
 }
 
 // CheckFormat 問題なく計算が行える構成になっているか確認

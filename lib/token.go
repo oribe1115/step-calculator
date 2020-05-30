@@ -14,9 +14,11 @@ type Token struct {
 type TokenType string
 
 const (
-	TypeNumber TokenType = "NUMBER"
-	TypePlus   TokenType = "PLUS"
-	TypeMinus  TokenType = "MINUS"
+	TypeNumber   TokenType = "NUMBER"
+	TypePlus     TokenType = "PLUS"
+	TypeMinus    TokenType = "MINUS"
+	TypeMultiply TokenType = "MULTIPLY"
+	TypeDivision TokenType = "DIVISION"
 )
 
 func CreateNumberToken(num float64) *Token {
@@ -36,6 +38,20 @@ func CreatePlusToken() *Token {
 func CreateMinusToken() *Token {
 	return &Token{
 		Type:   TypeMinus,
+		Number: 0,
+	}
+}
+
+func CreateMultiplyToken() *Token {
+	return &Token{
+		Type:   TypeMultiply,
+		Number: 0,
+	}
+}
+
+func CreateDivisionToken() *Token {
+	return &Token{
+		Type:   TypeDivision,
 		Number: 0,
 	}
 }
@@ -63,6 +79,18 @@ func ReadPlus(line string) (token *Token, remainder string) {
 func ReadMinus(line string) (token *Token, remainder string) {
 	token = CreateMinusToken()
 	remainder = strings.TrimLeft(line, "-")
+	return token, remainder
+}
+
+func ReadMultiply(line string) (token *Token, remainder string) {
+	token = CreateMultiplyToken()
+	remainder = strings.TrimLeft(line, "*")
+	return token, remainder
+}
+
+func ReadDivision(line string) (token *Token, remainder string) {
+	token = CreateDivisionToken()
+	remainder = strings.TrimLeft(line, "/")
 	return token, remainder
 }
 
