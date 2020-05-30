@@ -14,7 +14,15 @@ type TestCase struct {
 
 var (
 	basicCases = []TestCase{
-		{Input: "1+1", Result: 2, IsError: false},
+		{"1", 1, false},
+		{"10", 10, false},
+		{"1.02", 1.02, false},
+		{"0.004", 0.004, false},
+		{"+", 0, true},
+		{"1+1", 2, false},
+		{"1+", 0, true},
+		{"1++", 0, true},
+		{"12+1.03", 13.03, false},
 	}
 )
 
