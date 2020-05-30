@@ -95,25 +95,25 @@ func ReadNumber(line string) (token *Token, remainder string, err error) {
 
 func ReadPlus(line string) (token *Token, remainder string) {
 	token = CreatePlusToken()
-	remainder = strings.TrimLeft(line, "+")
+	remainder = line[1:]
 	return token, remainder
 }
 
 func ReadMinus(line string) (token *Token, remainder string) {
 	token = CreateMinusToken()
-	remainder = strings.TrimLeft(line, "-")
+	remainder = line[1:]
 	return token, remainder
 }
 
 func ReadMultiply(line string) (token *Token, remainder string) {
 	token = CreateMultiplyToken()
-	remainder = strings.TrimLeft(line, "*")
+	remainder = line[1:]
 	return token, remainder
 }
 
 func ReadDivision(line string) (token *Token, remainder string) {
 	token = CreateDivisionToken()
-	remainder = strings.TrimLeft(line, "/")
+	remainder = line[1:]
 	return token, remainder
 }
 
