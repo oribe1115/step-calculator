@@ -19,7 +19,7 @@ func InitFormula(line string) (*Formula, error) {
 		if isDigit(line[0]) {
 			token, line, err = ReadNumber(line)
 			if err != nil {
-				panic(err)
+				return nil, err
 			}
 		} else {
 			switch line[0] {

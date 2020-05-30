@@ -16,7 +16,9 @@ func main() {
 	formula, err := lib.InitFormula(input)
 	if err != nil {
 		fmt.Println(err)
-		formula.PrintList()
+		if formula != nil {
+			formula.PrintList()
+		}
 		return
 	}
 
