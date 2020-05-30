@@ -25,15 +25,29 @@ func CreateNumberToken(num float64) *Token {
 	}
 }
 
-func ReadNumber(line string) (num float64, remainder string, err error) {
+func CreatePlusToken() *Token {
+	return &Token{
+		Type:   TypePlus,
+		Number: 0,
+	}
+}
+
+func ReadNumber(line string) (token *Token, remainder string, err error) {
 	re := regexp.MustCompile("^\\d+\\.\\d")
 	numString := re.FindString(line)
-	num, err = strconv.ParseFloat(numString, 64)
+	num, err := strconv.ParseFloat(numString, 64)
 	if err != nil {
-		return 0, "", err
+		return nil, "", err
 	}
 
+	token = CreateNumberToken(num)
 	remainder = strings.TrimLeft(line, numString)
 
-	return num, remainder, nil
+	return token, remainder, nil
+}
+
+func ReadPlus(line string) (token *Token, remainder string) {
+	token = CreatePlusToken()
+	remainder = strings.TrimLeft(line, "+")
+	return token, remainder
 }
