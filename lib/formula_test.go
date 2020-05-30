@@ -61,10 +61,10 @@ func runTest(t *testing.T, testCases []TestCase) {
 	for _, test := range testCases {
 		formula, err := InitFormula(test.Input)
 		if test.IsError {
-			assert.Error(t, err)
+			assert.Error(t, err, test)
 		} else {
-			assert.NoError(t, err)
-			assert.Equal(t, test.Expect, formula.Calc())
+			assert.NoError(t, err, test)
+			assert.Equal(t, test.Expect, formula.Calc(), test)
 		}
 	}
 }
