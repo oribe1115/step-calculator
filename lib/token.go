@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 type Token struct {
@@ -21,7 +20,7 @@ const (
 	TypeMinus    TokenType = "MINUS"
 	TypeMultiply TokenType = "MULTIPLY"
 	TypeDivision TokenType = "DIVISION"
-	TypeBracket  TokenType = "Bracket"
+	TypeBracket  TokenType = "BRACKET"
 )
 
 func CreateNumberToken(num float64) *Token {
@@ -88,7 +87,7 @@ func ReadNumber(line string) (token *Token, remainder string, err error) {
 	}
 
 	token = CreateNumberToken(num)
-	remainder = strings.TrimLeft(line, numString)
+	remainder = line[len(numString):]
 
 	return token, remainder, nil
 }
