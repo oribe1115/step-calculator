@@ -21,7 +21,6 @@ func main() {
 		}
 		return
 	}
-	formula.PrintList()
 
 	result := formula.Calc()
 	fmt.Println(result)
