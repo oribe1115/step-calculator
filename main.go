@@ -22,6 +22,11 @@ func main() {
 		return
 	}
 
-	result := formula.Calc()
+	result, err := formula.Calc()
+	if err != nil {
+		fmt.Println(err)
+		formula.PrintList()
+		return
+	}
 	fmt.Println(result)
 }

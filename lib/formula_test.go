@@ -41,6 +41,7 @@ var (
 		{"6/3", 2, false},
 		{"1/3", 0.3333333333333333, false},
 		{"5/2.5", 2, false},
+		{"1/0", 0, true},
 		{"*", 0, true},
 		{"/", 0, true},
 		{"3*", 0, true},
@@ -59,6 +60,7 @@ var (
 		{"(4*(1+4)-3)*2", 34, false},
 		{"(7.3-1)/(3.5*2)", 0.9, false},
 		{"(5*(3+(2-4*(1-3))))", 65, false},
+		{"4*3+2/(10-5*2)", 0, true},
 	}
 )
 
@@ -77,11 +79,20 @@ func TestBracketCase(t *testing.T) {
 func runTest(t *testing.T, testCases []TestCase) {
 	for _, test := range testCases {
 		formula, err := InitFormula(test.Input)
+		if err != nil {
+			if test.IsError {
+				assert.Error(t, err, test)
+			} else {
+				assert.NoError(t, err, test)
+			}
+			return
+		}
+		result, err := formula.Calc()
 		if test.IsError {
 			assert.Error(t, err, test)
 		} else {
 			assert.NoError(t, err, test)
-			assert.Equal(t, test.Expect, formula.Calc(), test)
+			assert.Equal(t, test.Expect, result, test)
 		}
 	}
 }

@@ -148,9 +148,9 @@ func ReadBracket(line string) (token *Token, remainder string, err error) {
 	return token, remainder, nil
 }
 
-func (t *Token) GetNumber() float64 {
+func (t *Token) GetNumber() (float64, error) {
 	if t.Type == TypeBracket {
 		return t.InBracket.Calc()
 	}
-	return t.Number
+	return t.Number, nil
 }
